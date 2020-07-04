@@ -5,11 +5,11 @@ public class YTVideo {
 	private String ID;
 	private String title;
 	private long duration;
-	private long upload;
-	private int category;
+	private String upload;
+	private String category;
 	
-	public void setID(String iD) {
-		ID = iD;
+	public void setID(String ID) {
+		this.ID = ID;
 	}
 	
 	public void setTitle(String title) {
@@ -20,11 +20,11 @@ public class YTVideo {
 		this.duration = duration;
 	}
 	
-	public void setUpload(long upload) {
+	public void setUpload(String upload) {
 		this.upload = upload;
 	}
 	
-	public void setCategory(int category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 
@@ -44,11 +44,11 @@ public class YTVideo {
 		return duration;
 	}
 
-	public long getUpload() {
+	public String getUpload() {
 		return upload;
 	}
 
-	public int getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
