@@ -1,4 +1,4 @@
-package main;
+package api;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,16 +11,37 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
+import internal.VideoCategory;
+import internal.YTVideoImpl;
+
+/**
+ * The main class for scraping YouTube
+ * @author VolcanicArts
+ * @since 1.0.0
+ */
 public class YTScraper {
 	
+	/**
+	 * Retrieve YouTube video information from a video ID
+	 * @param videoID - The videoID of the video you want to get info on
+	 * @return new YTVideo
+	 * @see YTVideo
+	 * @throws URISyntaxException
+	 */
 	public static YTVideo getYouTubeVideoInfo(String videoID) throws URISyntaxException {
 		return getYouTubeVideoInfo(new URI("https://www.youtube.com/watch?v=" + videoID));
 	}
 	
-	public static YTVideo getYouTubeVideoInfo(URI URL) {
+	/**
+	 * Retrieve YouTube video information
+	 * @param URI - The URL of the video you want to get info on
+	 * @return new YTVideo
+	 * @see YTVideo
+	 */
+	public static YTVideo getYouTubeVideoInfo(URI URI) {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
-			.uri(URL)
+			.uri(URI)
 			.GET()
 	        .setHeader("Content-Type", "application/json")
 	        .build();
@@ -33,25 +54,25 @@ public class YTScraper {
 		}
 		
 		if (res == null) return null;
-		//System.out.println(res.body());
 		String body = res.body();
+		
 		Pattern p = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
 		Matcher m = p.matcher(body);
 		if (m.find()) {
-			String found = m.group(1);
-			//System.out.println(found);
-			JSONObject data = new JSONObject(found);
+			JSONObject data = new JSONObject(m.group(1));
 			JSONObject playerData = new JSONObject(data.getJSONObject("args").getString("player_response"));
 			
 			JSONObject videoDetails = playerData.getJSONObject("videoDetails");
-			JSONObject miniPlayer = playerData.getJSONObject("microformat").getJSONObject("playerMicroformatRenderer");
+			JSONObject playerMFR = playerData.getJSONObject("microformat").getJSONObject("playerMicroformatRenderer");
 			
-			YTVideo video = new YTVideo();
+			YTVideoImpl video = new YTVideoImpl();
 			video.setID(videoDetails.getString("videoId"));
 			video.setTitle(videoDetails.getString("title"));
 			video.setDuration(Long.parseLong(videoDetails.getString("lengthSeconds")) * 1000);
-			video.setUpload(miniPlayer.getString("publishDate"));
-			video.setCategory(miniPlayer.getString("category"));
+			video.setUpload(playerMFR.getString("publishDate"));
+			if (playerMFR.has("category")) {
+				video.setCategory(VideoCategory.valueOf(playerMFR.getString("category")));
+			}
 			return video;
 		} else {
 			return null;
