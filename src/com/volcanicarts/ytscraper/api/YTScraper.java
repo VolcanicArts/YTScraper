@@ -1,4 +1,4 @@
-package api;
+package com.volcanicarts.ytscraper.api;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
-import internal.VideoCategory;
-import internal.YTVideoImpl;
+import com.volcanicarts.ytscraper.internal.VideoCategory;
+import com.volcanicarts.ytscraper.internal.YTVideoImpl;
 
 /**
  * The main class for scraping YouTube

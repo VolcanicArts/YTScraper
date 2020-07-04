@@ -1,6 +1,6 @@
-package internal;
+package com.volcanicarts.ytscraper.internal;
 
-import api.YTVideo;
+import com.volcanicarts.ytscraper.api.YTVideo;
 
 /**
  * The YTVideo implementation class 

@@ -1,4 +1,4 @@
-package internal;
+package com.volcanicarts.ytscraper.internal;
 
 /**
  * The category of a returned video

@@ -3,8 +3,8 @@ package test;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import api.YTScraper;
-import api.YTVideo;
+import com.volcanicarts.ytscraper.api.YTScraper;
+import com.volcanicarts.ytscraper.api.YTVideo;
 
 public class Main {
 

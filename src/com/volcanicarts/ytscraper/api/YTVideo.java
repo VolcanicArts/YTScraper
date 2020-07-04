@@ -1,6 +1,6 @@
-package api;
+package com.volcanicarts.ytscraper.api;
 
-import internal.VideoCategory;
+import com.volcanicarts.ytscraper.internal.VideoCategory;
 
 /**
  * The interface for any returned YouTube video
