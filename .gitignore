@@ -1,0 +1,8 @@
+# maven compile
+/target/
+
+# eclipse files
+.classpath
+.project
+.settings/
+/bin/
