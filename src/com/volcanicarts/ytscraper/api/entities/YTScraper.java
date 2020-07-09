@@ -1,4 +1,4 @@
-package com.volcanicarts.ytscraper.api;
+package com.volcanicarts.ytscraper.api.entities;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,12 +13,11 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.volcanicarts.ytscraper.internal.InvalidVideoException;
-import com.volcanicarts.ytscraper.internal.VideoCategory;
-import com.volcanicarts.ytscraper.internal.YTVideoImpl;
+import com.volcanicarts.ytscraper.internal.entities.VideoCategory;
+import com.volcanicarts.ytscraper.internal.entities.YTVideoImpl;
+import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
 
 /**
  * The main class for scraping YouTube

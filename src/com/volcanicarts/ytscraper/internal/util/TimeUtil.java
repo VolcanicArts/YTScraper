@@ -1,4 +1,4 @@
-package com.volcanicarts.ytscraper.internal;
+package com.volcanicarts.ytscraper.internal.util;
 
 import java.util.concurrent.TimeUnit;
 

@@ -1,4 +1,4 @@
-package com.volcanicarts.ytscraper.internal;
+package com.volcanicarts.ytscraper.internal.exceptions;
 
 /**
  * Custom exception for when a video's data cannot be found

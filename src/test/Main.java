@@ -3,9 +3,9 @@ package test;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import com.volcanicarts.ytscraper.api.YTScraper;
-import com.volcanicarts.ytscraper.api.YTVideo;
-import com.volcanicarts.ytscraper.internal.InvalidVideoException;
+import com.volcanicarts.ytscraper.api.entities.YTScraper;
+import com.volcanicarts.ytscraper.api.entities.YTVideo;
+import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
 
 public class Main {
 
