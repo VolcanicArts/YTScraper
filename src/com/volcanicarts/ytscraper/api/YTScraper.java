@@ -99,7 +99,7 @@ public class YTScraper {
 	}
 	
 	private static long parseUploaded(String uploaded) throws ParseException {
-		DateFormat sourceFormat = new SimpleDateFormat("yyyy-mm-dd");
+		DateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = sourceFormat.parse(uploaded);
 		return date.getTime();
 	}
