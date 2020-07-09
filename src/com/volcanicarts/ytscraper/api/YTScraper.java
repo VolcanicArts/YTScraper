@@ -6,9 +6,14 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.volcanicarts.ytscraper.internal.InvalidVideoException;
@@ -81,9 +86,22 @@ public class YTScraper {
 		video.setID(videoDetails.getString("videoId"));
 		video.setTitle(videoDetails.getString("title"));
 		video.setDuration(Long.parseLong(videoDetails.getString("lengthSeconds")) * 1000);
-		video.setUpload(playerMFR.getString("publishDate"));
+		long uploaded;
+		try {
+			uploaded = parseUploaded(playerMFR.getString("publishDate"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Could not parse upload date correctly", e);
+		}
+		video.setUpload(uploaded);
 		if (playerMFR.has("category")) video.setCategory(VideoCategory.valueOf(playerMFR.getString("category")));
 		return video;
+	}
+	
+	private static long parseUploaded(String uploaded) throws ParseException {
+		DateFormat sourceFormat = new SimpleDateFormat("yyyy-mm-dd");
+		Date date = sourceFormat.parse(uploaded);
+		return date.getTime();
 	}
 
 }

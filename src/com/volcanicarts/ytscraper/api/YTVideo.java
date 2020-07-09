@@ -30,9 +30,14 @@ public interface YTVideo {
 	long getDuration();
 
 	/**
-	 * @return The upload date of the video in YYYY-MM-DD
+	 * @return The upload date of the video in timecode format
 	 */
-	String getUpload();
+	long getUpload();
+	
+	/**
+	 * @return The upload date of the video in String format
+	 */
+	String getUploadFormatted();
 
 	/**
 	 * This is null in cases where the video author has not set a category

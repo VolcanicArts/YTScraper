@@ -1,5 +1,7 @@
 package com.volcanicarts.ytscraper.internal;
 
+import java.util.Date;
+
 import com.volcanicarts.ytscraper.api.YTVideo;
 
 /**
@@ -12,7 +14,7 @@ public class YTVideoImpl implements YTVideo {
 	private String ID;
 	private String title;
 	private long duration;
-	private String upload;
+	private long upload;
 	private VideoCategory category;
 	
 	public YTVideoImpl setID(String ID) {
@@ -30,7 +32,7 @@ public class YTVideoImpl implements YTVideo {
 		return this;
 	}
 	
-	public YTVideoImpl setUpload(String upload) {
+	public YTVideoImpl setUpload(long upload) {
 		this.upload = upload;
 		return this;
 	}
@@ -61,8 +63,13 @@ public class YTVideoImpl implements YTVideo {
 	}
 
 	@Override
-	public String getUpload() {
+	public long getUpload() {
 		return upload;
+	}
+	
+	@Override
+	public String getUploadFormatted() {
+		return new Date(getUpload()).toString();
 	}
 
 	@Override

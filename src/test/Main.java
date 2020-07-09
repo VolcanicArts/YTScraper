@@ -23,7 +23,7 @@ public class Main {
 			System.out.println("Title: " + video.getTitle());
 			System.out.println("Duration: " + video.getDuration());
 			System.out.println("Category: " + video.getCategory());
-			System.out.println("Uploaded: " + video.getUpload());
+			System.out.println("Uploaded: " + video.getUploadFormatted());
 		} else {
 			System.out.println("No data could be found");
 		}
