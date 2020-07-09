@@ -16,6 +16,11 @@ import com.volcanicarts.ytscraper.api.entities.YTVideo;
 import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
 import com.volcanicarts.ytscraper.internal.util.TimeUtil;
 
+/**
+ * A worker that makes a single request and scrape
+ * @author VolcanicArts
+ * @since 1.2.0
+ */
 public class Worker {
 	
 	private final Pattern CONFIG_PATTERN = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");

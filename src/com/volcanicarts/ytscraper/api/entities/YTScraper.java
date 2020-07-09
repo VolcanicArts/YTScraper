@@ -51,7 +51,7 @@ public class YTScraper {
 	}
 	
 	/**
-	 * Begins loading the video
+	 * Starts the worker process
 	 */
 	public void load(VideoResultHandler handler) {
 		this.handler = handler;

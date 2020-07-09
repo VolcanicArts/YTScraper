@@ -19,6 +19,9 @@ public class InvalidVideoException extends Exception {
 		this.videoID = YouTubeUtil.videoLinkToID(videoID);
 	}
 
+	/**
+	 * @return The ID of the video that caused the exception
+	 */
 	public String getVideoID() {
 		return videoID;
 	}
