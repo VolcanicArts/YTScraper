@@ -61,6 +61,11 @@ public class YTVideoImpl implements YTVideo {
 	public long getDuration() {
 		return duration;
 	}
+	
+	@Override
+	public String getDurationFormatted() {
+		return TimeUtil.convertMilliToHHMMSS(getDuration());
+	}
 
 	@Override
 	public long getUpload() {

@@ -28,6 +28,11 @@ public interface YTVideo {
 	 * @return The duration of the video in milliseconds
 	 */
 	long getDuration();
+	
+	/**
+	 * @return The duration of the video in HH:MM:SS. Will exclude HH if 0
+	 */
+	String getDurationFormatted();
 
 	/**
 	 * @return The upload date of the video in timecode format

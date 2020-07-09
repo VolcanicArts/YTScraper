@@ -21,7 +21,7 @@ public class Main {
 		if (video != null) {
 			System.out.println("ID: " + video.getID());
 			System.out.println("Title: " + video.getTitle());
-			System.out.println("Duration: " + video.getDuration());
+			System.out.println("Duration: " + video.getDurationFormatted());
 			System.out.println("Category: " + video.getCategory());
 			System.out.println("Uploaded: " + video.getUploadFormatted());
 		} else {
