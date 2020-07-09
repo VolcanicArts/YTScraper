@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
+import com.volcanicarts.ytscraper.internal.InvalidVideoException;
 import com.volcanicarts.ytscraper.internal.VideoCategory;
 import com.volcanicarts.ytscraper.internal.YTVideoImpl;
 
@@ -21,14 +22,17 @@ import com.volcanicarts.ytscraper.internal.YTVideoImpl;
  */
 public class YTScraper {
 	
+	private static final Pattern CONFIG_PATTERN = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
+	
 	/**
 	 * Retrieve YouTube video information from a video ID
 	 * @param videoID - The videoID of the video you want to get info on
 	 * @return new YTVideo
 	 * @see YTVideo
 	 * @throws URISyntaxException
+	 * @throws InvalidVideoException 
 	 */
-	public static YTVideo getYouTubeVideoInfo(String videoID) throws URISyntaxException {
+	public static YTVideo getYouTubeVideoInfo(String videoID) throws URISyntaxException, InvalidVideoException {
 		return getYouTubeVideoInfo(new URI("https://www.youtube.com/watch?v=" + videoID));
 	}
 	
@@ -36,9 +40,10 @@ public class YTScraper {
 	 * Retrieve YouTube video information
 	 * @param URI - The URL of the video you want to get info on
 	 * @return new YTVideo
+	 * @throws InvalidVideoException
 	 * @see YTVideo
 	 */
-	public static YTVideo getYouTubeVideoInfo(URI URI) {
+	public static YTVideo getYouTubeVideoInfo(URI URI) throws InvalidVideoException {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
 			.uri(URI)
@@ -51,13 +56,13 @@ public class YTScraper {
 			res = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
+			throw new RuntimeException("An exception has occured with the request", e);
 		}
 		
-		if (res == null) return null;
+		if (res == null) throw new InvalidVideoException("No data could be found for the provided video: " + URI);
 		String body = res.body();
 		
-		Pattern p = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
-		Matcher m = p.matcher(body);
+		Matcher m = CONFIG_PATTERN.matcher(body);
 		if (m.find()) {
 			JSONObject data = new JSONObject(m.group(1));
 			JSONObject playerData = new JSONObject(data.getJSONObject("args").getString("player_response"));
@@ -65,18 +70,20 @@ public class YTScraper {
 			JSONObject videoDetails = playerData.getJSONObject("videoDetails");
 			JSONObject playerMFR = playerData.getJSONObject("microformat").getJSONObject("playerMicroformatRenderer");
 			
-			YTVideoImpl video = new YTVideoImpl();
-			video.setID(videoDetails.getString("videoId"));
-			video.setTitle(videoDetails.getString("title"));
-			video.setDuration(Long.parseLong(videoDetails.getString("lengthSeconds")) * 1000);
-			video.setUpload(playerMFR.getString("publishDate"));
-			if (playerMFR.has("category")) {
-				video.setCategory(VideoCategory.valueOf(playerMFR.getString("category")));
-			}
-			return video;
+			return createVideo(videoDetails, playerMFR);
 		} else {
-			return null;
+			throw new InvalidVideoException("No data could be found for the provided video: " + URI);
 		}
+	}
+	
+	private static YTVideo createVideo(JSONObject videoDetails, JSONObject playerMFR) {
+		YTVideoImpl video = new YTVideoImpl();
+		video.setID(videoDetails.getString("videoId"));
+		video.setTitle(videoDetails.getString("title"));
+		video.setDuration(Long.parseLong(videoDetails.getString("lengthSeconds")) * 1000);
+		video.setUpload(playerMFR.getString("publishDate"));
+		if (playerMFR.has("category")) video.setCategory(VideoCategory.valueOf(playerMFR.getString("category")));
+		return video;
 	}
 
 }
