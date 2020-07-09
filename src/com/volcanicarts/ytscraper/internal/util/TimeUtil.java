@@ -1,5 +1,9 @@
 package com.volcanicarts.ytscraper.internal.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class TimeUtil {
@@ -19,6 +23,12 @@ public class TimeUtil {
 				    TimeUnit.MILLISECONDS.toSeconds(millis) - 
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 		}
+	}
+	
+	public static long parseUploaded(String uploaded) throws ParseException {
+		DateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sourceFormat.parse(uploaded);
+		return date.getTime();
 	}
 
 }

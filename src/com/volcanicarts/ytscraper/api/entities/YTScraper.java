@@ -6,18 +6,17 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
 import com.volcanicarts.ytscraper.internal.entities.VideoCategory;
+import com.volcanicarts.ytscraper.internal.entities.VideoResultHandler;
 import com.volcanicarts.ytscraper.internal.entities.YTVideoImpl;
 import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
+import com.volcanicarts.ytscraper.internal.util.TimeUtil;
 
 /**
  * The main class for scraping YouTube
@@ -26,31 +25,39 @@ import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
  */
 public class YTScraper {
 	
-	private static final Pattern CONFIG_PATTERN = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
+	private final Pattern CONFIG_PATTERN = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
+	
+	private final URI uri;
+	private VideoResultHandler handler;
 	
 	/**
-	 * Retrieve YouTube video information from a video ID
+	 * Makes a new YTScraper from a video ID and the callback class
 	 * @param videoID - The videoID of the video you want to get info on
-	 * @return new YTVideo
-	 * @see YTVideo
+	 * @param handler - The callback class
 	 * @throws URISyntaxException
-	 * @throws InvalidVideoException 
 	 */
-	public static YTVideo getYouTubeVideoInfo(String videoID) throws URISyntaxException, InvalidVideoException {
-		return getYouTubeVideoInfo(new URI("https://www.youtube.com/watch?v=" + videoID));
+	public YTScraper(String videoID) throws URISyntaxException {
+		this.uri = new URI("https://www.youtube.com/watch?v=" + videoID);
 	}
 	
 	/**
-	 * Retrieve YouTube video information
-	 * @param URI - The URL of the video you want to get info on
-	 * @return new YTVideo
-	 * @throws InvalidVideoException
-	 * @see YTVideo
+	 * Makes a new YTScraper from a video ID and the callback class
+	 * @param URI - The URI of the video you want to get info on
+	 * @param handler - The callback class
+	 * @throws URISyntaxException
 	 */
-	public static YTVideo getYouTubeVideoInfo(URI URI) throws InvalidVideoException {
+	public YTScraper(URI uri) {
+		this.uri = uri;
+	}
+	
+	/**
+	 * Begins loading the video
+	 */
+	public void load(VideoResultHandler handler) {
+		this.handler = handler;
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
-			.uri(URI)
+			.uri(this.uri)
 			.GET()
 	        .setHeader("Content-Type", "application/json")
 	        .build();
@@ -60,10 +67,10 @@ public class YTScraper {
 			res = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
-			throw new RuntimeException("An exception has occured with the request", e);
+			handler.loadFailed(new InvalidVideoException("An exception has occured with the request"));
 		}
 		
-		if (res == null) throw new InvalidVideoException("No data could be found for the provided video: " + URI);
+		if (res == null) handler.loadFailed(new InvalidVideoException("No data could be found for the provided video"));
 		String body = res.body();
 		
 		Matcher m = CONFIG_PATTERN.matcher(body);
@@ -74,33 +81,29 @@ public class YTScraper {
 			JSONObject videoDetails = playerData.getJSONObject("videoDetails");
 			JSONObject playerMFR = playerData.getJSONObject("microformat").getJSONObject("playerMicroformatRenderer");
 			
-			return createVideo(videoDetails, playerMFR);
+			YTVideo video = createVideo(videoDetails, playerMFR);
+			if (video != null) handler.videoLoaded(video);
 		} else {
-			throw new InvalidVideoException("No data could be found for the provided video: " + URI);
+			handler.loadFailed(new InvalidVideoException("No data could be found for the provided video"));
 		}
 	}
 	
-	private static YTVideo createVideo(JSONObject videoDetails, JSONObject playerMFR) {
+	private YTVideo createVideo(JSONObject videoDetails, JSONObject playerMFR) {
 		YTVideoImpl video = new YTVideoImpl();
 		video.setID(videoDetails.getString("videoId"));
 		video.setTitle(videoDetails.getString("title"));
 		video.setDuration(Long.parseLong(videoDetails.getString("lengthSeconds")) * 1000);
 		long uploaded;
 		try {
-			uploaded = parseUploaded(playerMFR.getString("publishDate"));
+			uploaded = TimeUtil.parseUploaded(playerMFR.getString("publishDate"));
 		} catch (ParseException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Could not parse upload date correctly", e);
+			handler.loadFailed(new InvalidVideoException("Could not parse upload date correctly"));
+			return null;
 		}
 		video.setUpload(uploaded);
 		if (playerMFR.has("category")) video.setCategory(VideoCategory.valueOf(playerMFR.getString("category")));
 		return video;
-	}
-	
-	private static long parseUploaded(String uploaded) throws ParseException {
-		DateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = sourceFormat.parse(uploaded);
-		return date.getTime();
 	}
 
 }
