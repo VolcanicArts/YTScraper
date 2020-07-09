@@ -2,6 +2,8 @@ package test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.volcanicarts.ytscraper.api.entities.YTScraper;
 import com.volcanicarts.ytscraper.api.entities.YTVideo;
@@ -13,7 +15,11 @@ public class Main {
 	public static void main(String[] args) throws URISyntaxException {
 		// A simple test case for using the YTScraper and YTVideo classes
 		URI uri = new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-		new YTScraper(uri).load(new VideoResultHandler() {
+		List<URI> uris = new ArrayList<URI>();
+		for (int i = 0; i < 10; i++) {
+			uris.add(uri);
+		}
+		new YTScraper(uris).load(new VideoResultHandler() {
 
 			@Override
 			public void videoLoaded(YTVideo video) {

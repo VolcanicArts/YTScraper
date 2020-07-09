@@ -1,5 +1,9 @@
 package com.volcanicarts.ytscraper.internal.exceptions;
 
+import java.net.URI;
+
+import com.volcanicarts.ytscraper.internal.util.YouTubeUtil;
+
 /**
  * Custom exception for when a video's data cannot be found
  * @author VolcanicArts
@@ -8,8 +12,15 @@ package com.volcanicarts.ytscraper.internal.exceptions;
 @SuppressWarnings("serial")
 public class InvalidVideoException extends Exception {
 	
-	public InvalidVideoException(String error) {
+	private String videoID;
+	
+	public InvalidVideoException(URI videoID, String error) {
 		super(error);
+		this.videoID = YouTubeUtil.videoLinkToID(videoID);
+	}
+
+	public String getVideoID() {
+		return videoID;
 	}
 
 }
