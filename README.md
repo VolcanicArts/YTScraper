@@ -5,7 +5,8 @@ This scraper is multithreaded and can retrieve a max of 5 videos at the same tim
 Check [Main](src/test/Main.java) for an example.
 
 # Attributes
-- ID
+- Video ID
+- URL
 - Title
 - Duration (milliseconds)
 - Duration (hh:mm:ss)
