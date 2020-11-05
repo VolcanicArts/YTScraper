@@ -1,4 +1,4 @@
-package com.volcanicarts.ytscraper.internal.entities;
+package volcanicarts.ytscraper.internal.entities;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,10 +11,10 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
-import com.volcanicarts.ytscraper.api.entities.YTScraper;
-import com.volcanicarts.ytscraper.api.entities.YTVideo;
-import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
-import com.volcanicarts.ytscraper.internal.util.TimeUtil;
+import volcanicarts.ytscraper.api.entities.YTScraper;
+import volcanicarts.ytscraper.api.entities.YTVideo;
+import volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
+import volcanicarts.ytscraper.internal.util.TimeUtil;
 
 /**
  * A worker that makes a single request and scrape

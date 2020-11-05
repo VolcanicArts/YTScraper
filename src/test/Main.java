@@ -5,10 +5,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.volcanicarts.ytscraper.api.entities.YTScraper;
-import com.volcanicarts.ytscraper.api.entities.YTVideo;
-import com.volcanicarts.ytscraper.internal.entities.VideoResultHandler;
-import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
+import volcanicarts.ytscraper.api.entities.YTScraper;
+import volcanicarts.ytscraper.api.entities.YTVideo;
+import volcanicarts.ytscraper.internal.entities.VideoResultHandler;
+import volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
 
 public class Main {
 

@@ -1,14 +1,14 @@
-package com.volcanicarts.ytscraper.api.entities;
+package volcanicarts.ytscraper.api.entities;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.volcanicarts.ytscraper.api.entities.YTScraper;
-import com.volcanicarts.ytscraper.internal.entities.VideoResultHandler;
-import com.volcanicarts.ytscraper.internal.entities.Worker;
-import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
+import volcanicarts.ytscraper.api.entities.YTScraper;
+import volcanicarts.ytscraper.internal.entities.VideoResultHandler;
+import volcanicarts.ytscraper.internal.entities.Worker;
+import volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
 
 /**
  * The main class for scraping YouTube

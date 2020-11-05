@@ -1,7 +1,7 @@
-package com.volcanicarts.ytscraper.internal.entities;
+package volcanicarts.ytscraper.internal.entities;
 
-import com.volcanicarts.ytscraper.api.entities.YTVideo;
-import com.volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
+import volcanicarts.ytscraper.api.entities.YTVideo;
+import volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
 
 /**
  * The result handler for the YTScraper

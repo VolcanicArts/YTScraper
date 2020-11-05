@@ -1,9 +1,9 @@
-package com.volcanicarts.ytscraper.internal.entities;
+package volcanicarts.ytscraper.internal.entities;
 
 import java.util.Date;
 
-import com.volcanicarts.ytscraper.api.entities.YTVideo;
-import com.volcanicarts.ytscraper.internal.util.TimeUtil;
+import volcanicarts.ytscraper.api.entities.YTVideo;
+import volcanicarts.ytscraper.internal.util.TimeUtil;
 
 /**
  * The YTVideo implementation class 
