@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import volcanicarts.ytscraper.api.entities.YTScraper;
@@ -80,16 +81,24 @@ public class Worker {
 		video.setID(videoDetails.getString("videoId"));
 		video.setTitle(videoDetails.getString("title"));
 		video.setDuration(Long.parseLong(videoDetails.getString("lengthSeconds")) * 1000);
-		long uploaded;
 		try {
-			uploaded = TimeUtil.parseUploaded(playerMFR.getString("publishDate"));
+			long uploaded = TimeUtil.parseUploaded(playerMFR.getString("publishDate"));
+			video.setUpload(uploaded);
 		} catch (ParseException e) {
-			e.printStackTrace();
 			scraper.loadFailed(this, new InvalidVideoException(this.uri, "Could not parse upload date correctly"));
 			return null;
 		}
-		video.setUpload(uploaded);
-		if (playerMFR.has("category")) video.setCategory(VideoCategory.valueOf(playerMFR.getString("category")));
+		if (playerMFR.has("category")) video.setCategory(VideoCategory.valueOf(playerMFR.getString("category").replace(" ", "_").replace("&", "and")));
+		video.setThumbnailURI(videoDetails.getJSONObject("thumbnail").getJSONArray("thumbnails").getJSONObject(0).getString("url").split("[?]")[0]);
+		try {
+			JSONObject description = playerMFR.getJSONObject("description");
+			video.setDescription(description.getString("simpleText"));
+		} catch (JSONException e) {
+			video.setDescription("");
+		}
+		video.setAuthor(videoDetails.getString("author"));
+		video.setViewCount(Long.parseUnsignedLong(videoDetails.getString("viewCount")));
+		video.setChannelID(videoDetails.getString("channelId"));
 		return video;
 	}
 

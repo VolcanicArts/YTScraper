@@ -17,6 +17,11 @@ public class YTVideoImpl implements YTVideo {
 	private long duration;
 	private long upload;
 	private VideoCategory category;
+	private String thumbnailURI;
+	private String description;
+	private String author;
+	private long viewCount;
+	private String channelID;
 	
 	public YTVideoImpl setID(String ID) {
 		this.ID = ID;
@@ -42,6 +47,31 @@ public class YTVideoImpl implements YTVideo {
 		this.category = category;
 		return this;
 	}
+	
+	public YTVideoImpl setThumbnailURI(String thumbnailURI) {
+		this.thumbnailURI = thumbnailURI;
+		return this;
+	}
+	
+	public YTVideoImpl setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+	
+	public YTVideoImpl setAuthor(String author) {
+		this.author = author;
+		return this;
+	}
+	
+	public YTVideoImpl setViewCount(long viewCount) {
+		this.viewCount = viewCount;
+		return this;
+	}
+	
+	public YTVideoImpl setChannelID(String channelID) {
+		this.channelID = channelID;
+		return this;
+	}
 
 	@Override
 	public String getID() {
@@ -50,7 +80,7 @@ public class YTVideoImpl implements YTVideo {
 	
 	@Override
 	public String getURL() {
-		return "https://www.youtube.com/watch?v=" + getID();
+		return String.format("https://www.youtube.com/watch?v=%s", getID());
 	}
 
 	@Override
@@ -81,6 +111,36 @@ public class YTVideoImpl implements YTVideo {
 	@Override
 	public VideoCategory getCategory() {
 		return category;
+	}
+
+	@Override
+	public String getThumbnailURI() {
+		return this.thumbnailURI;
+	}
+
+	@Override
+	public String getDescription() {
+		return this.description;
+	}
+
+	@Override
+	public String getAuthor() {
+		return this.author;
+	}
+
+	@Override
+	public long getViewCount() {
+		return this.viewCount;
+	}
+	
+	@Override
+	public String getViewCountFormatted() {
+		return String.format("%,d", this.viewCount);
+	}
+
+	@Override
+	public String getChannelID() {
+		return this.channelID;
 	}
 
 }

@@ -49,5 +49,35 @@ public interface YTVideo {
 	 * @return The category of the video
 	 */
 	VideoCategory getCategory();
+	
+	/**
+	 * @return The URI of the thumbnail in the best quality
+	 */
+	String getThumbnailURI();
+	
+	/**
+	 * @return The description of the video
+	 */
+	String getDescription();
+	
+	/**
+	 * @return The author of the video
+	 */
+	String getAuthor();
+	
+	/**
+	 * @return The view count of the video at the time of the request
+	 */
+	long getViewCount();
+	
+	/**
+	 * @return The view count of the video at the time of the request, formatted
+	 */
+	String getViewCountFormatted();
+	
+	/**
+	 * @return The ID of the channel
+	 */
+	String getChannelID();
 
 }
