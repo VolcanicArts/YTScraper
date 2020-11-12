@@ -1,6 +1,4 @@
-package volcanicarts.ytscraper.api.entities;
-
-import volcanicarts.ytscraper.internal.entities.VideoCategory;
+package volcanicarts.ytscraper.ytvideo;
 
 /**
  * The interface for any returned YouTube video
@@ -12,7 +10,7 @@ public interface YTVideo {
 	/**
 	 * @return The ID of the video
 	 */
-	String getID();
+	String getVideoID();
 
 	/**
 	 * @return The URL of the video

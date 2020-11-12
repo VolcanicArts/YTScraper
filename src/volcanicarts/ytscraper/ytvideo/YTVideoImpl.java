@@ -1,9 +1,8 @@
-package volcanicarts.ytscraper.internal.entities;
+package volcanicarts.ytscraper.ytvideo;
 
 import java.util.Date;
 
-import volcanicarts.ytscraper.api.entities.YTVideo;
-import volcanicarts.ytscraper.internal.util.TimeUtil;
+import volcanicarts.ytscraper.util.TimeUtil;
 
 /**
  * The YTVideo implementation class 
@@ -12,7 +11,7 @@ import volcanicarts.ytscraper.internal.util.TimeUtil;
  */
 public class YTVideoImpl implements YTVideo {
 	
-	private String ID;
+	private String videoID;
 	private String title;
 	private long duration;
 	private long upload;
@@ -23,8 +22,8 @@ public class YTVideoImpl implements YTVideo {
 	private long viewCount;
 	private String channelID;
 	
-	public YTVideoImpl setID(String ID) {
-		this.ID = ID;
+	public YTVideoImpl setID(String videoID) {
+		this.videoID = videoID;
 		return this;
 	}
 	
@@ -74,13 +73,13 @@ public class YTVideoImpl implements YTVideo {
 	}
 
 	@Override
-	public String getID() {
-		return ID;
+	public String getVideoID() {
+		return videoID;
 	}
 	
 	@Override
 	public String getURL() {
-		return String.format("https://www.youtube.com/watch?v=%s", getID());
+		return String.format("https://www.youtube.com/watch?v=%s", getVideoID());
 	}
 
 	@Override

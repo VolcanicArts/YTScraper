@@ -1,4 +1,4 @@
-package volcanicarts.ytscraper.internal.util;
+package volcanicarts.ytscraper.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -1,4 +1,4 @@
-package volcanicarts.ytscraper.internal.util;
+package volcanicarts.ytscraper.util;
 
 import java.net.URI;
 import java.util.regex.Matcher;

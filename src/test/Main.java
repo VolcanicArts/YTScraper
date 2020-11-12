@@ -5,10 +5,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import volcanicarts.ytscraper.api.entities.YTScraper;
-import volcanicarts.ytscraper.api.entities.YTVideo;
-import volcanicarts.ytscraper.internal.entities.VideoResultHandler;
-import volcanicarts.ytscraper.internal.exceptions.InvalidVideoException;
+import volcanicarts.ytscraper.YTScraper;
+import volcanicarts.ytscraper.ytvideo.InvalidVideoException;
+import volcanicarts.ytscraper.ytvideo.VideoResultHandler;
+import volcanicarts.ytscraper.ytvideo.YTVideo;
 
 public class Main {
 
@@ -23,7 +23,7 @@ public class Main {
 
 			@Override
 			public void videoLoaded(YTVideo video) {
-				System.out.println("Video ID: " + video.getID());
+				System.out.println("Video ID: " + video.getVideoID());
 				System.out.println("URL: " + video.getURL());
 				System.out.println("Title: " + video.getTitle());
 				System.out.println("Duration: " + video.getDurationFormatted());

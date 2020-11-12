@@ -1,8 +1,8 @@
-package volcanicarts.ytscraper.internal.exceptions;
+package volcanicarts.ytscraper.ytvideo;
 
 import java.net.URI;
 
-import volcanicarts.ytscraper.internal.util.YouTubeUtil;
+import volcanicarts.ytscraper.util.YouTubeUtil;
 
 /**
  * Custom exception for when a video's data cannot be found
