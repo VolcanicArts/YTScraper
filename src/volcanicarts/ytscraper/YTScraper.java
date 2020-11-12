@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
-import volcanicarts.ytscraper.worker.Worker;
+import volcanicarts.ytscraper.util.YouTubeUtil;
+import volcanicarts.ytscraper.worker.GenericWorker;
+import volcanicarts.ytscraper.worker.YTVideoWorker;
 import volcanicarts.ytscraper.ytvideo.InvalidVideoException;
-import volcanicarts.ytscraper.ytvideo.VideoResultHandler;
+import volcanicarts.ytscraper.ytvideo.ResultHandler;
 import volcanicarts.ytscraper.ytvideo.YTVideo;
 
 /**
@@ -20,8 +22,8 @@ public class YTScraper {
 	private final int MAX_WORKERS = 5;
 	
 	private final List<String> URLs = new ArrayList<String>();
-	private final List<Worker> workers = new ArrayList<Worker>();
-	private VideoResultHandler handler;
+	private final List<GenericWorker> workers = new ArrayList<GenericWorker>();
+	private ResultHandler handler;
 	private OkHttpClient requestClient = new OkHttpClient();
 	
 	/**
@@ -44,9 +46,12 @@ public class YTScraper {
 		this.URLs.add(URLs);
 	}
 	
-	private Worker createWorker() {
-		if (workers.size() == MAX_WORKERS) return null;
-		Worker worker = new Worker();
+	private GenericWorker createWorker(String URL) {
+		if (URL == null) return null;
+		GenericWorker worker = null;
+		if (YouTubeUtil.isURLVideo(URL)) {
+			worker = new YTVideoWorker();
+		}
 		this.workers.add(worker);
 		return worker;
 	}
@@ -54,17 +59,17 @@ public class YTScraper {
 	/**
 	 * Starts the worker process
 	 */
-	public void load(VideoResultHandler handler) {
+	public void load(ResultHandler handler) {
 		this.handler = handler;
 		checkForComplete();
 	}
 	
 	private void checkForComplete() {
 		if (this.URLs.size() != 0) {
-			Worker worker = createWorker();
-			if (worker != null) {
+			if (workers.size() != MAX_WORKERS) {
 				String URL = this.URLs.remove(0);
-				if (URL != null) {
+				GenericWorker worker = createWorker(URL);
+				if (URL != null && worker != null) {
 					worker.assign(requestClient, URL, this);
 					worker.run();
 				}
@@ -78,13 +83,13 @@ public class YTScraper {
 		}
 	}
 	
-	public void videoLoaded(Worker worker, YTVideo video) {
+	public void videoLoaded(GenericWorker worker, YTVideo video) {
 		workers.remove(worker);
 		this.handler.videoLoaded(video);
 		checkForComplete();
 	}
 	
-	public void loadFailed(Worker worker, InvalidVideoException e) {
+	public void loadFailed(GenericWorker worker, InvalidVideoException e) {
 		workers.remove(worker);
 		this.handler.loadFailed(e);
 		checkForComplete();

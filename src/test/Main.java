@@ -6,7 +6,7 @@ import java.util.List;
 
 import volcanicarts.ytscraper.YTScraper;
 import volcanicarts.ytscraper.ytvideo.InvalidVideoException;
-import volcanicarts.ytscraper.ytvideo.VideoResultHandler;
+import volcanicarts.ytscraper.ytvideo.ResultHandler;
 import volcanicarts.ytscraper.ytvideo.YTVideo;
 
 public class Main {
@@ -18,7 +18,7 @@ public class Main {
 		for (int i = 0; i < 10; i++) {
 			URLs.add(URL);
 		}
-		new YTScraper(URLs).load(new VideoResultHandler() {
+		new YTScraper(URLs).load(new ResultHandler() {
 
 			@Override
 			public void videoLoaded(YTVideo video) {

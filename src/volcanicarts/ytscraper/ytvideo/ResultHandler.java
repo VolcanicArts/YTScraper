@@ -6,7 +6,7 @@ package volcanicarts.ytscraper.ytvideo;
  * @author VolcanicArts
  * @since 1.1.0
  */
-public abstract class VideoResultHandler {
+public abstract class ResultHandler {
 
 	public abstract void videoLoaded(YTVideo video);
 	public abstract void loadFailed(InvalidVideoException e);

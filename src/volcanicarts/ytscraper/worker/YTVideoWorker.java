@@ -1,6 +1,5 @@
 package volcanicarts.ytscraper.worker;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,10 +7,6 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import volcanicarts.ytscraper.YTScraper;
 import volcanicarts.ytscraper.util.TimeUtil;
 import volcanicarts.ytscraper.ytvideo.InvalidVideoException;
 import volcanicarts.ytscraper.ytvideo.VideoCategory;
@@ -19,58 +14,29 @@ import volcanicarts.ytscraper.ytvideo.YTVideo;
 import volcanicarts.ytscraper.ytvideo.YTVideoImpl;
 
 /**
- * A worker that makes a single request and scrape
+ * A worker designed for scraping a video's page
  * @author VolcanicArts
- * @since 1.2.0
+ * @since 1.5.0
  */
-public class Worker {
+public class YTVideoWorker extends GenericWorker {
 	
-	private final Pattern CONFIG_PATTERN = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
+	private static final Pattern PATTERN = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
 	
-	private OkHttpClient requestClient;
-	private String URL;
-	private YTScraper scraper;
-	
-	public void assign(OkHttpClient requestClient, String URL, YTScraper scraper) {
-		this.requestClient = requestClient;
-		this.URL = URL;
-		this.scraper = scraper;
-	}
-	
+	@Override
 	public void run() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				Request request = new Request.Builder()
-				      .url(URL)
-				      .build();
-
-				String body = null;
-				try (Response response = requestClient.newCall(request).execute()) {
-					body = response.body().string();
-				} catch (IOException e) {
-					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "The request could not be fulfilled"));
-				}
-				
-				if (body == null || body.isEmpty()) scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "The request could not be fulfilled"));
-				
-				Matcher m = CONFIG_PATTERN.matcher(body);
-				if (m.find()) {
-					JSONObject data = new JSONObject(m.group(1));
-					JSONObject playerData = new JSONObject(data.getJSONObject("args").getString("player_response"));
-					JSONObject videoDetails = playerData.getJSONObject("videoDetails");
-					JSONObject playerMFR = playerData.getJSONObject("microformat").getJSONObject("playerMicroformatRenderer");
-					
-					YTVideo video = createVideo(videoDetails, playerMFR);
-					if (video != null) scraper.videoLoaded(Worker.this, video);
-				} else {
-					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be parsed for the provided video"));
-				}
-			}
+		super.run();
+		Matcher m = PATTERN.matcher(body);
+		if (m.find()) {
+			JSONObject data = new JSONObject(m.group(1));
+			JSONObject playerData = new JSONObject(data.getJSONObject("args").getString("player_response"));
+			JSONObject videoDetails = playerData.getJSONObject("videoDetails");
+			JSONObject playerMFR = playerData.getJSONObject("microformat").getJSONObject("playerMicroformatRenderer");
 			
-		}).start();
-		
+			YTVideo video = createVideo(videoDetails, playerMFR);
+			if (video != null) scraper.videoLoaded(this, video);
+		} else {
+			scraper.loadFailed(this, new InvalidVideoException(this.URL, "No data could be parsed for the provided video"));
+		}
 	}
 	
 	private YTVideo createVideo(JSONObject videoDetails, JSONObject playerMFR) {
@@ -118,5 +84,4 @@ public class Worker {
 				.setDescription(description);
 		return video;
 	}
-
 }

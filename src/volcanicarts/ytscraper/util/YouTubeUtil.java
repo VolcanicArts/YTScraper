@@ -25,5 +25,9 @@ public class YouTubeUtil {
 			return null;
 		}
 	}
+	
+	public static boolean isURLVideo(String URL) {
+		return (videoLinkToID(URL) != null);
+	}
 
 }
