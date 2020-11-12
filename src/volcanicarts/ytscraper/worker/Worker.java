@@ -27,10 +27,12 @@ public class Worker {
 	
 	private final Pattern CONFIG_PATTERN = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
 	
+	private OkHttpClient requestClient;
 	private String URL;
 	private YTScraper scraper;
 	
-	public void assign(String URL, YTScraper scraper) {
+	public void assign(OkHttpClient requestClient, String URL, YTScraper scraper) {
+		this.requestClient = requestClient;
 		this.URL = URL;
 		this.scraper = scraper;
 	}
@@ -40,14 +42,12 @@ public class Worker {
 
 			@Override
 			public void run() {
-				OkHttpClient client = new OkHttpClient();
-
 				Request request = new Request.Builder()
 				      .url(URL)
 				      .build();
 
 				String body = null;
-				try (Response response = client.newCall(request).execute();) {
+				try (Response response = requestClient.newCall(request).execute()) {
 					body = response.body().string();
 				} catch (IOException e) {
 					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be found for the provided video"));
@@ -59,7 +59,6 @@ public class Worker {
 				if (m.find()) {
 					JSONObject data = new JSONObject(m.group(1));
 					JSONObject playerData = new JSONObject(data.getJSONObject("args").getString("player_response"));
-					
 					JSONObject videoDetails = playerData.getJSONObject("videoDetails");
 					JSONObject playerMFR = playerData.getJSONObject("microformat").getJSONObject("playerMicroformatRenderer");
 					

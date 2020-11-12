@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
 import volcanicarts.ytscraper.worker.Worker;
 import volcanicarts.ytscraper.ytvideo.InvalidVideoException;
 import volcanicarts.ytscraper.ytvideo.VideoResultHandler;
@@ -21,6 +22,7 @@ public class YTScraper {
 	private final List<String> URLs = new ArrayList<String>();
 	private final List<Worker> workers = new ArrayList<Worker>();
 	private VideoResultHandler handler;
+	private OkHttpClient requestClient = new OkHttpClient();
 	
 	/**
 	 * Makes a new YTScraper from a list of URLs
@@ -63,7 +65,7 @@ public class YTScraper {
 			if (worker != null) {
 				String URL = this.URLs.remove(0);
 				if (URL != null) {
-					worker.assign(URL, this);
+					worker.assign(requestClient, URL, this);
 					worker.run();
 				}
 				try {
