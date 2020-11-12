@@ -2,11 +2,12 @@ package volcanicarts.ytscraper.ytvideo;
 
 /**
  * The category of a returned video
+ *
  * @author VolcanicArts
  * @since 1.0.0
  */
 public enum VideoCategory {
-	
+
 	NONE("", -1),
 	Film_and_Animation("Film & Animation", 1),
 	Autos_and_Vehicles("Autos & Vehicles", 2),
@@ -40,17 +41,23 @@ public enum VideoCategory {
 	Shorts("Shorts", 42),
 	Shows("Shows", 43),
 	Trailers("Trailers", 44);
-	
-	public static VideoCategory parseCategory(String category) {
-		return VideoCategory.valueOf(category.replace(" ", "_").replace("&", "and"));
-	}
-	
-	private String actualName;
-	private int ID;
-	
+
+	private final String actualName;
+	private final int ID;
+
 	VideoCategory(String actualName, int ID) {
 		this.actualName = actualName;
 		this.ID = ID;
+	}
+
+	/**
+	 * Gets the category associated with the given string
+	 *
+	 * @param category String
+	 * @return VideoCategory
+	 */
+	public static VideoCategory parseCategory(String category) {
+		return VideoCategory.valueOf(category.replace(" ", "_").replace("&", "and"));
 	}
 
 	/**

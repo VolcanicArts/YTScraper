@@ -4,14 +4,15 @@ import volcanicarts.ytscraper.util.YouTubeUtil;
 
 /**
  * Custom exception for when a video's data cannot be found
+ *
  * @author VolcanicArts
  * @since 1.0.2
  */
 @SuppressWarnings("serial")
 public class InvalidVideoException extends Exception {
-	
-	private String videoID;
-	
+
+	private final String videoID;
+
 	public InvalidVideoException(String URL, String error) {
 		super(error);
 		this.videoID = YouTubeUtil.videoLinkToID(URL);
@@ -23,16 +24,13 @@ public class InvalidVideoException extends Exception {
 	public String getVideoID() {
 		return videoID;
 	}
-	
+
 	/**
 	 * Prints the error reason
 	 */
 	public void printErrorReason() {
-		StringBuilder message = new StringBuilder();
-		message.append("YTScraper Error: ");
-		message.append(String.format("[VideoID: %s] | ", getVideoID()));
-		message.append(getMessage());
-		System.err.println(message.toString());
+		String message = "YTScraper Error: " + String.format("[VideoID: %s] | ", getVideoID()) + getMessage();
+		System.err.println(message);
 	}
 
 }

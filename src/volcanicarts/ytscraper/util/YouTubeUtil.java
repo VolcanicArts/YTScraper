@@ -5,16 +5,17 @@ import java.util.regex.Pattern;
 
 /**
  * A class for utilities for YouTube
+ *
  * @author VolcanicArts
  * @since 1.2.0
  */
 public class YouTubeUtil {
-	
-	private static final String ID_REGEX = "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%\u200C\u200B2F|youtu.be%2F|%2Fv%2F)[^#\\&\\?\\n]*";
+
+	private static final String ID_REGEX = "(?<=watch\\?v=|/videos/|embed/|youtu.be/|/v/|/e/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%\u200C\u200B2F|youtu.be%2F|%2Fv%2F)[^#&?\\n]*";
 	private static final Pattern ID_PATTERN = Pattern.compile(ID_REGEX);
-	
+
 	/**
-	 * @param URI
+	 * @param URL String
 	 * @return A video ID
 	 */
 	public static String videoLinkToID(String URL) {
@@ -25,7 +26,11 @@ public class YouTubeUtil {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * @param URL String
+	 * @return If the given URL is a video URL
+	 */
 	public static boolean isURLVideo(String URL) {
 		return (videoLinkToID(URL) != null);
 	}

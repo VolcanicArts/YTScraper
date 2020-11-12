@@ -1,20 +1,20 @@
 package test;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import volcanicarts.ytscraper.YTScraper;
 import volcanicarts.ytscraper.ytvideo.InvalidVideoException;
 import volcanicarts.ytscraper.ytvideo.ResultHandler;
 import volcanicarts.ytscraper.ytvideo.YTVideo;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 
-	public static void main(String[] args) throws URISyntaxException {
+	public static void main(String[] args) {
 		// A simple test case for using the YTScraper and YTVideo classes
 		String URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-		List<String> URLs = new ArrayList<String>();
+		List<String> URLs = new ArrayList<>();
 		for (int i = 0; i < 10; i++) {
 			URLs.add(URL);
 		}
@@ -41,7 +41,7 @@ public class Main {
 			public void loadFailed(InvalidVideoException e) {
 				e.printErrorReason();
 			}
-			
+
 		});
 	}
 
