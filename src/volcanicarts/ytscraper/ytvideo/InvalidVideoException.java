@@ -23,5 +23,16 @@ public class InvalidVideoException extends Exception {
 	public String getVideoID() {
 		return videoID;
 	}
+	
+	/**
+	 * Prints the error reason
+	 */
+	public void printErrorReason() {
+		StringBuilder message = new StringBuilder();
+		message.append("YTScraper Error: ");
+		message.append(String.format("[VideoID: %s] | ", getVideoID()));
+		message.append(getMessage());
+		System.err.println(message.toString());
+	}
 
 }

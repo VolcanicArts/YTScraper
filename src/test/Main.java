@@ -39,7 +39,7 @@ public class Main {
 
 			@Override
 			public void loadFailed(InvalidVideoException e) {
-				e.printStackTrace();
+				e.printErrorReason();
 			}
 			
 		});
