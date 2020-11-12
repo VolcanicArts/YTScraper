@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>volcanicarts</groupId>
   <artifactId>ytscraper</artifactId>
-  <version>1.3.0</version>
+  <version>1.4.0</version>
   <name>YTScraper</name>
   <description>YouTube scraper</description>
   <build>
@@ -22,6 +22,11 @@
 		    <groupId>org.json</groupId>
 		    <artifactId>json</artifactId>
 		    <version>20200518</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.squareup.okhttp3</groupId>
+		    <artifactId>okhttp</artifactId>
+		    <version>4.10.0-RC1</version>
 		</dependency>
 	</dependencies>
 </project>

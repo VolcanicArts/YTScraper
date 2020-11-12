@@ -1,7 +1,5 @@
 package volcanicarts.ytscraper.ytvideo;
 
-import java.net.URI;
-
 import volcanicarts.ytscraper.util.YouTubeUtil;
 
 /**
@@ -14,9 +12,9 @@ public class InvalidVideoException extends Exception {
 	
 	private String videoID;
 	
-	public InvalidVideoException(URI videoID, String error) {
+	public InvalidVideoException(String URL, String error) {
 		super(error);
-		this.videoID = YouTubeUtil.videoLinkToID(videoID);
+		this.videoID = YouTubeUtil.videoLinkToID(URL);
 	}
 
 	/**

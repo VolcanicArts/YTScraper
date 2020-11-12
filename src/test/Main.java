@@ -1,6 +1,5 @@
 package test;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +13,12 @@ public class Main {
 
 	public static void main(String[] args) throws URISyntaxException {
 		// A simple test case for using the YTScraper and YTVideo classes
-		URI uri = new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-		List<URI> uris = new ArrayList<URI>();
+		String URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+		List<String> URLs = new ArrayList<String>();
 		for (int i = 0; i < 10; i++) {
-			uris.add(uri);
+			URLs.add(URL);
 		}
-		new YTScraper(uris).load(new VideoResultHandler() {
+		new YTScraper(URLs).load(new VideoResultHandler() {
 
 			@Override
 			public void videoLoaded(YTVideo video) {

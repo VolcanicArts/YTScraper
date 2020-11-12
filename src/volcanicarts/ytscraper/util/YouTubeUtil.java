@@ -1,6 +1,5 @@
 package volcanicarts.ytscraper.util;
 
-import java.net.URI;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,8 +17,8 @@ public class YouTubeUtil {
 	 * @param URI
 	 * @return A video ID
 	 */
-	public static String videoLinkToID(URI uri) {
-		Matcher m = ID_PATTERN.matcher(uri.toString());
+	public static String videoLinkToID(String URL) {
+		Matcher m = ID_PATTERN.matcher(URL);
 		if (m.find()) {
 			return m.group(0);
 		} else {

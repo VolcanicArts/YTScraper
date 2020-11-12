@@ -1,10 +1,6 @@
 package volcanicarts.ytscraper.worker;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +8,9 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import volcanicarts.ytscraper.YTScraper;
 import volcanicarts.ytscraper.util.TimeUtil;
 import volcanicarts.ytscraper.ytvideo.InvalidVideoException;
@@ -28,11 +27,11 @@ public class Worker {
 	
 	private final Pattern CONFIG_PATTERN = Pattern.compile("\\{};ytplayer.config = (\\{.*?.*\\})");
 	
-	private URI uri;
+	private String URL;
 	private YTScraper scraper;
 	
-	public void assign(URI uri, YTScraper scraper) {
-		this.uri = uri;
+	public void assign(String URL, YTScraper scraper) {
+		this.URL = URL;
 		this.scraper = scraper;
 	}
 	
@@ -41,23 +40,20 @@ public class Worker {
 
 			@Override
 			public void run() {
-				HttpClient client = HttpClient.newHttpClient();
-				HttpRequest request = HttpRequest.newBuilder()
-					.uri(Worker.this.uri)
-					.GET()
-			        .setHeader("Content-Type", "application/json")
-			        .build();
-				
-				HttpResponse<String> res = null;
-				try {
-					res = client.send(request, HttpResponse.BodyHandlers.ofString());
-				} catch (IOException | InterruptedException e) {
-					e.printStackTrace();
-					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.uri, "An exception has occured with the request"));
+				OkHttpClient client = new OkHttpClient();
+
+				Request request = new Request.Builder()
+				      .url(URL)
+				      .build();
+
+				String body = null;
+				try (Response response = client.newCall(request).execute();) {
+					body = response.body().string();
+				} catch (IOException e) {
+					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be found for the provided video"));
 				}
 				
-				if (res == null) scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.uri, "No data could be found for the provided video"));
-				String body = res.body();
+				if (body == null || body.isEmpty()) scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be found for the provided video"));
 				
 				Matcher m = CONFIG_PATTERN.matcher(body);
 				if (m.find()) {
@@ -70,7 +66,7 @@ public class Worker {
 					YTVideo video = createVideo(videoDetails, playerMFR);
 					if (video != null) scraper.videoLoaded(Worker.this, video);
 				} else {
-					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.uri, "No data could be found for the provided video"));
+					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be found for the provided video"));
 				}
 			}
 			
@@ -87,7 +83,7 @@ public class Worker {
 			long uploaded = TimeUtil.parseUploaded(playerMFR.getString("publishDate"));
 			video.setUpload(uploaded);
 		} catch (ParseException e) {
-			scraper.loadFailed(this, new InvalidVideoException(this.uri, "Could not parse upload date correctly"));
+			scraper.loadFailed(this, new InvalidVideoException(this.URL, "Could not parse upload date correctly"));
 			return null;
 		}
 		if (playerMFR.has("category")) video.setCategory(VideoCategory.valueOf(playerMFR.getString("category").replace(" ", "_").replace("&", "and")));

@@ -1,6 +1,5 @@
 package volcanicarts.ytscraper;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,28 +18,28 @@ public class YTScraper {
 	
 	private final int MAX_WORKERS = 5;
 	
-	private final List<URI> uris = new ArrayList<URI>();
+	private final List<String> URLs = new ArrayList<String>();
 	private final List<Worker> workers = new ArrayList<Worker>();
 	private VideoResultHandler handler;
 	
 	/**
-	 * Makes a new YTScraper from a list of URIs
+	 * Makes a new YTScraper from a list of URLs
 	 * @param videoID - The videoID of the video you want to get info on
 	 * @param handler - The callback class
 	 * @throws URISyntaxException
 	 */
-	public YTScraper(List<URI> uris) throws URISyntaxException {
-		this.uris.addAll(uris);
+	public YTScraper(List<String> URLs) throws URISyntaxException {
+		this.URLs.addAll(URLs);
 	}
 	
 	/**
-	 * Makes a new YTScraper from a URI
+	 * Makes a new YTScraper from a URL
 	 * @param URI - The URI of the video you want to get info on
 	 * @param handler - The callback class
 	 * @throws URISyntaxException
 	 */
-	public YTScraper(URI uri) {
-		this.uris.add(uri);
+	public YTScraper(String URLs) {
+		this.URLs.add(URLs);
 	}
 	
 	private Worker createWorker() {
@@ -59,12 +58,12 @@ public class YTScraper {
 	}
 	
 	private void checkForComplete() {
-		if (this.uris.size() != 0) {
+		if (this.URLs.size() != 0) {
 			Worker worker = createWorker();
 			if (worker != null) {
-				URI uri = this.uris.remove(0);
-				if (uri != null) {
-					worker.assign(uri, this);
+				String URL = this.URLs.remove(0);
+				if (URL != null) {
+					worker.assign(URL, this);
 					worker.run();
 				}
 				try {
