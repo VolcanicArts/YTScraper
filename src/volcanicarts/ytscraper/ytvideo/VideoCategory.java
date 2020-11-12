@@ -7,6 +7,7 @@ package volcanicarts.ytscraper.ytvideo;
  */
 public enum VideoCategory {
 	
+	NONE("", -1),
 	Film_and_Animation("Film & Animation", 1),
 	Autos_and_Vehicles("Autos & Vehicles", 2),
 	Music("Music", 10),
@@ -39,6 +40,10 @@ public enum VideoCategory {
 	Shorts("Shorts", 42),
 	Shows("Shows", 43),
 	Trailers("Trailers", 44);
+	
+	public static VideoCategory parseCategory(String category) {
+		return VideoCategory.valueOf(category.replace(" ", "_").replace("&", "and"));
+	}
 	
 	private String actualName;
 	private int ID;

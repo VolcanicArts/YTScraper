@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>volcanicarts</groupId>
   <artifactId>ytscraper</artifactId>
-  <version>1.4.1</version>
+  <version>1.4.2</version>
   <name>YTScraper</name>
   <description>YouTube scraper</description>
   <build>

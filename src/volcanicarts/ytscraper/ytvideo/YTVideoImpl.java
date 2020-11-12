@@ -14,15 +14,15 @@ public class YTVideoImpl implements YTVideo {
 	private String videoID;
 	private String title;
 	private long duration;
-	private long upload;
+	private long uploaded;
 	private VideoCategory category;
-	private String thumbnailURI;
+	private String thumbnailURL;
 	private String description;
 	private String author;
 	private long viewCount;
 	private String channelID;
 	
-	public YTVideoImpl setID(String videoID) {
+	public YTVideoImpl setVideoID(String videoID) {
 		this.videoID = videoID;
 		return this;
 	}
@@ -37,8 +37,8 @@ public class YTVideoImpl implements YTVideo {
 		return this;
 	}
 	
-	public YTVideoImpl setUpload(long upload) {
-		this.upload = upload;
+	public YTVideoImpl setUploaded(long uploaded) {
+		this.uploaded = uploaded;
 		return this;
 	}
 	
@@ -47,8 +47,8 @@ public class YTVideoImpl implements YTVideo {
 		return this;
 	}
 	
-	public YTVideoImpl setThumbnailURI(String thumbnailURI) {
-		this.thumbnailURI = thumbnailURI;
+	public YTVideoImpl setThumbnailURL(String thumbnailURL) {
+		this.thumbnailURL = thumbnailURL;
 		return this;
 	}
 	
@@ -98,13 +98,13 @@ public class YTVideoImpl implements YTVideo {
 	}
 
 	@Override
-	public long getUpload() {
-		return upload;
+	public long getUploaded() {
+		return uploaded;
 	}
 	
 	@Override
-	public String getUploadFormatted() {
-		return new Date(getUpload()).toString();
+	public String getUploadedFormatted() {
+		return new Date(getUploaded()).toString();
 	}
 
 	@Override
@@ -113,8 +113,8 @@ public class YTVideoImpl implements YTVideo {
 	}
 
 	@Override
-	public String getThumbnailURI() {
-		return this.thumbnailURI;
+	public String getThumbnailURL() {
+		return this.thumbnailURL;
 	}
 
 	@Override

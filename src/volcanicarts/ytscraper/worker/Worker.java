@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import okhttp3.OkHttpClient;
@@ -50,10 +50,10 @@ public class Worker {
 				try (Response response = requestClient.newCall(request).execute()) {
 					body = response.body().string();
 				} catch (IOException e) {
-					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be found for the provided video"));
+					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "The request could not be fulfilled"));
 				}
 				
-				if (body == null || body.isEmpty()) scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be found for the provided video"));
+				if (body == null || body.isEmpty()) scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "The request could not be fulfilled"));
 				
 				Matcher m = CONFIG_PATTERN.matcher(body);
 				if (m.find()) {
@@ -65,7 +65,7 @@ public class Worker {
 					YTVideo video = createVideo(videoDetails, playerMFR);
 					if (video != null) scraper.videoLoaded(Worker.this, video);
 				} else {
-					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be found for the provided video"));
+					scraper.loadFailed(Worker.this, new InvalidVideoException(Worker.this.URL, "No data could be parsed for the provided video"));
 				}
 			}
 			
@@ -74,28 +74,48 @@ public class Worker {
 	}
 	
 	private YTVideo createVideo(JSONObject videoDetails, JSONObject playerMFR) {
-		YTVideoImpl video = new YTVideoImpl();
-		video.setID(videoDetails.getString("videoId"));
-		video.setTitle(videoDetails.getString("title"));
-		video.setDuration(Long.parseLong(videoDetails.getString("lengthSeconds")) * 1000);
+		String videoID = videoDetails.getString("videoId");
+		String title = videoDetails.getString("title");
+		Long duration = Long.parseUnsignedLong(videoDetails.getString("lengthSeconds")) * 1000l;
+		String author = videoDetails.getString("author");
+		Long viewCount = Long.parseUnsignedLong(videoDetails.getString("viewCount"));
+		String channelID = videoDetails.getString("channelId");
+		
+		JSONArray thumbnails = videoDetails.getJSONObject("thumbnail").getJSONArray("thumbnails");
+		JSONObject thumbnail = thumbnails.getJSONObject(thumbnails.length() - 1);
+		String thumbnailURL = thumbnail.getString("url").split("[?]")[0];
+		
+		String publishDate = playerMFR.getString("publishDate");
+		Long uploaded = null;
 		try {
-			long uploaded = TimeUtil.parseUploaded(playerMFR.getString("publishDate"));
-			video.setUpload(uploaded);
+			uploaded = TimeUtil.parseUploaded(publishDate);
 		} catch (ParseException e) {
-			scraper.loadFailed(this, new InvalidVideoException(this.URL, "Could not parse upload date correctly"));
-			return null;
+			uploaded = 0l;
 		}
-		if (playerMFR.has("category")) video.setCategory(VideoCategory.valueOf(playerMFR.getString("category").replace(" ", "_").replace("&", "and")));
-		video.setThumbnailURI(videoDetails.getJSONObject("thumbnail").getJSONArray("thumbnails").getJSONObject(0).getString("url").split("[?]")[0]);
-		try {
-			JSONObject description = playerMFR.getJSONObject("description");
-			video.setDescription(description.getString("simpleText"));
-		} catch (JSONException e) {
-			video.setDescription("");
+		
+		VideoCategory videoCategory = VideoCategory.NONE;
+		if (playerMFR.has("category")) {
+			String category = playerMFR.getString("category");
+			videoCategory = VideoCategory.parseCategory(category);
 		}
-		video.setAuthor(videoDetails.getString("author"));
-		video.setViewCount(Long.parseUnsignedLong(videoDetails.getString("viewCount")));
-		video.setChannelID(videoDetails.getString("channelId"));
+		
+		String description = "";
+		if (playerMFR.has("description")) {
+			JSONObject descriptionObj = playerMFR.getJSONObject("description");
+			description = descriptionObj.getString("simpleText");
+		}
+		
+		YTVideoImpl video = new YTVideoImpl()
+				.setVideoID(videoID)
+				.setTitle(title)
+				.setDuration(duration)
+				.setAuthor(author)
+				.setViewCount(viewCount)
+				.setChannelID(channelID)
+				.setThumbnailURL(thumbnailURL)
+				.setUploaded(uploaded)
+				.setCategory(videoCategory)
+				.setDescription(description);
 		return video;
 	}
 

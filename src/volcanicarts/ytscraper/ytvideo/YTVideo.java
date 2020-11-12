@@ -35,12 +35,12 @@ public interface YTVideo {
 	/**
 	 * @return The upload date of the video in timecode format
 	 */
-	long getUpload();
+	long getUploaded();
 	
 	/**
 	 * @return The upload date of the video in String format
 	 */
-	String getUploadFormatted();
+	String getUploadedFormatted();
 
 	/**
 	 * This is null in cases where the video author has not set a category
@@ -49,9 +49,9 @@ public interface YTVideo {
 	VideoCategory getCategory();
 	
 	/**
-	 * @return The URI of the thumbnail in the best quality
+	 * @return The URL of the thumbnail in the best quality
 	 */
-	String getThumbnailURI();
+	String getThumbnailURL();
 	
 	/**
 	 * @return The description of the video

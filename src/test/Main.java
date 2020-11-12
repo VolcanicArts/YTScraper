@@ -27,9 +27,9 @@ public class Main {
 				System.out.println("Title: " + video.getTitle());
 				System.out.println("Duration: " + video.getDurationFormatted());
 				System.out.println("Category: " + video.getCategory());
-				System.out.println("Uploaded: " + video.getUpload());
-				System.out.println("Uploaded Formatted: " + video.getUploadFormatted());
-				System.out.println("Thumbnail URI: " + video.getThumbnailURI());
+				System.out.println("Uploaded: " + video.getUploaded());
+				System.out.println("Uploaded Formatted: " + video.getUploadedFormatted());
+				System.out.println("Thumbnail URI: " + video.getThumbnailURL());
 				System.out.println("Description: " + video.getDescription());
 				System.out.println("Author: " + video.getAuthor());
 				System.out.println("View Count: " + video.getViewCount());
