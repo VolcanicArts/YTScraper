@@ -1,8 +1,7 @@
 # maven compile
 /target/
+dependency-reduced-pom.xml
 
-# eclipse files
-.classpath
-.project
-.settings/
-/bin/
+# intellij files
+*.iml
+/.idea
